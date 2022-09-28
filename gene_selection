@@ -1,0 +1,27 @@
+library(dplyr)
+library(WGCNA)
+
+data1 <- read.delim("GSE00000_anotacao_v1.txt", header = T)
+
+data2 <- read.delim("GSE00000_matrix.txt", header = T)
+
+data3 <- merge(data1, data2, by.x = "ID", by.y = "ID")
+
+#data4 <- data3[!(data3$gene == ""), ] 
+
+data5 <- distinct(data3, ID, .keep_all = TRUE)
+
+
+rowID=data5[,1]
+rowGroup=data5[,2]
+datET=data5[,-1:-2]
+row.names(datET) <- rowID
+
+collapsed <- collapseRows(datET, rowGroup, rowID, 
+                          method="MaxMean", connectivityBasedCollapsing=FALSE,
+                          methodFunction=NULL, connectivityPower=1,
+                          selectFewestMissing=TRUE, thresholdCombine=NA)
+
+data_filtered <- collapsed$datETcollapsed
+
+write.table(data_filtered, "GSE0000_pronto.txt", sep="\t", row.names = T)

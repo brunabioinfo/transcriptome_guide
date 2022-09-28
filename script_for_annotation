@@ -8,6 +8,6 @@ annotLookup <- getBM(
   filter = "with_affy_hg_u133_plus_2",
   values = T)
   
-write.table(annotLookup, "GSE10334_anotacao_v1.txt", sep= "\t", row.names = F)
+write.table(annotLookup, "GSE00000_anotacao_v1.txt", sep= "\t", row.names = F)
 
 filters <- listFilters(mart)

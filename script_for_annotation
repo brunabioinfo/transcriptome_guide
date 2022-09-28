@@ -1,0 +1,13 @@
+library("biomaRt")
+mart <- useMart("ENSEMBL_MART_ENSEMBL")
+mart <- useDataset("hsapiens_gene_ensembl", mart)
+
+annotLookup <- getBM(
+  mart=mart,
+  attributes=c("affy_hg_u133_plus_2", "external_gene_name"),
+  filter = "with_affy_hg_u133_plus_2",
+  values = T)
+  
+write.table(annotLookup, "GSE10334_anotacao_v1.txt", sep= "\t", row.names = F)
+
+filters <- listFilters(mart)

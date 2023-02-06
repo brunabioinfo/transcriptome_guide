@@ -1,0 +1,38 @@
+
+BiocManager::install("edgeR")
+
+library(edgeR)
+
+#Normalizing
+counts <- read.delim("counts_file.txt", header = T, row.names = 1)
+
+pdf(file= "human_boxplot_raw.pdf")
+boxplot(counts)
+dev.off()
+
+pdf(file= "human_barplot_raw.pdf")
+barplot(as.matrix(counts))
+dev.off()
+
+
+dge <- DGEList(counts=counts)
+
+keep <- filterByExpr(dge)
+dge <- dge[keep,,keep.lib.sizes=FALSE]
+
+
+dge <- calcNormFactors(dge)
+logCPM <- cpm(dge, log=TRUE, prior.count = 1)
+
+
+pdf(file= "human_boxplot_norm.pdf")
+boxplot(logCPM)
+dev.off()
+
+pdf(file= "human_barplot_norm.pdf")
+barplot(logCPM)
+dev.off()
+
+
+write.table(x = logCPM ,file =  "countsfile_logCPM.txt", sep = "\t", row.names = T)
+
